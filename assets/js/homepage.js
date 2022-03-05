@@ -1,9 +1,9 @@
 let userFormEl = document.querySelector("#user-form");
 let nameInputEl = document.querySelector("#username");
 let repoContainerEl = document.querySelector("#repos-container");
-let reporSearchTerm = document.querySelector("#repo-search-term");
+let repoSearchTerm = document.querySelector("#repo-search-term");
 
-let getUserRepos = function() {
+
     let getUserRepos = function(user) {
         //format the github ape url
         let apiUrl = "https://api.github.com/users/" + user + "/repos";
@@ -13,7 +13,9 @@ let getUserRepos = function() {
         .then(function(response) {
             //request was successful
             if (response.ok) {
+            console.log(response);
             response.json().then(function(data) {
+                console.log(data);
                 displayRepos(data, user);            
             });
         } else {
@@ -25,7 +27,7 @@ let getUserRepos = function() {
             alert("Unable to connect to GitHub");
         })
     };
-};
+
 
 let formSubmitHandler = function(event) {
     event.preventDefault();
@@ -35,6 +37,9 @@ let formSubmitHandler = function(event) {
 
     if (username) {
         getUserRepos(username);
+
+        //clear old content
+        repoContainerEl.textContent = '';
         nameInputEl.value = "";
     } else {
         alert("Please enter a GitHub Username");
@@ -49,11 +54,11 @@ let displayRepos = function(repos, searchTerm) {
         repoContainerEl.textContent = "No repos found.";
         return;
     }
-    console.log(repo);
+    console.log(repos);
     console.log(searchTerm);
     //clear old content
     repoContainerEl.textContent = "";
-    reporSearchTerm.textContent = searchTerm;
+    repoSearchTerm.textContent = searchTerm;
 
     //loop over repos
     for (var i = 0; i < repos.length; i++) {
@@ -61,7 +66,7 @@ let displayRepos = function(repos, searchTerm) {
         let repoName = repos[i].owner.login + "/" + repos[i].name;
 
         //create a container for each repo
-        let titleEl = document.createElement("div");
+        let repoEl = document.createElement("div");
         repoContainerEl.classList = "list-item flex-row justify-space-between align-center";
 
         //create a span element to hold repository name
